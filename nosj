@@ -79,7 +79,7 @@ main() {
     old_ifs=$IFS
 
     tokenize "$1"
-    parse
+    time parse
 }
 
 main "$@"
