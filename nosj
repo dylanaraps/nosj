@@ -25,12 +25,7 @@ parse() {
 
         \}|\]) parent= ;;
 
-        *)
-            declare -axg "${parent}${key//[^[a-zA-Z0-9]/_}+=('$val')"
-
-            # Debugging purposes.
-            printf '%s\n' "$_" >&2
-        ;;
+        *) json+=("${parent}${key//[^[a-zA-Z0-9]/_}+=('$val')") ;;
     esac
 }
 
@@ -41,6 +36,10 @@ main() {
     }
 
     mapfile -tC parse -c 1 < "$1"
+    declare -axg "${json[@]}"
+
+    [[ $2 == -v ]] &&
+        printf '%s\n' "${json[@]}"
 }
 
 main "$@"
