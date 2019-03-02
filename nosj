@@ -12,15 +12,15 @@ tokenize() {
                 esac
             ;;
 
-            \"|\')
-                ((string=string == 1 ? 0 : 1))
-            ;;
-
             :)
                 case $string in
                     1) tokens+=: ;;
                     *) tokens+=%%:::%% ;;
                 esac
+            ;;
+
+            \"|\')
+                ((string=string == 1 ? 0 : 1))
             ;;
 
             ""|[[:space:]])
