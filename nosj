@@ -17,11 +17,10 @@ tokenize() {
             ;;
 
             :)
-                if [[ $string == 0 ]]; then
-                    tokens+=%%:::%%
-                else
-                    tokens+=:
-                fi
+                case $string in
+                    1) tokens+=: ;;
+                    *) tokens+=%%:::%% ;;
+                esac
             ;;
 
             ""|[[:space:]])
@@ -29,9 +28,7 @@ tokenize() {
                     tokens+=$char
             ;;
 
-            *)
-                tokens+=$char
-            ;;
+            *) tokens+=$char ;;
         esac
     done < "$1"
 
@@ -60,14 +57,14 @@ parse() {
                     json+=("${key//[^[a-zA-Z0-9]/_}+=('$val')")
             ;;
 
-            "")
-            ;;
+            "") ;;
         esac
+
         unset key val
     }
 
     declare -axg "${json[@]}"
-    printf '%s\n' "${json[@]}"
+    printf '%s\n' "${json[@]}" >&2
 }
 
 main() {
@@ -77,9 +74,8 @@ main() {
     }
 
     old_ifs=$IFS
-
     tokenize "$1"
-    time parse
+    parse
 }
 
 main "$@"
