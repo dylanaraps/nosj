@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+#
+# nosj -
+
+parse() {
+    [[ -z $2 ]] &&
+        return
+
+    j=${2#${2%%[![:space:]]*}}
+
+    key=${j/[\"\']:*/}
+    key=${key/#[\"\']}
+
+    val=${j/#?$key?:}
+    val=${val#${val%%[![:space:]]*}}
+    val=${val/%,}
+    val=${val#[\"\']}
+    val=${val%[\"\']}
+
+    case ${val::1} in
+        \{|\[)
+            [[ $key != { ]] &&
+                parent+=${key//[^[a-zA-Z0-9]/_}_
+        ;;
+
+        \}|\]) parent= ;;
+
+        *)
+            declare -axg "${parent}${key//[^[a-zA-Z0-9]/_}+=('$val')"
+
+            # Debugging purposes.
+            printf '%s\n' "$_" >&2
+        ;;
+    esac
+}
+
+main() {
+    [[ -f $1 ]] || {
+        printf '%s\n' "File '$1' not found" >&2
+        exit 1
+    }
+
+    mapfile -tC parse -c 1 < "$1"
+}
+
+main "$@"
