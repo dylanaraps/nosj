@@ -6,26 +6,36 @@ parse() {
     [[ -z $2 ]] &&
         return
 
+    # Remove trailing white-space.
     j=${2#${2%%[![:space:]]*}}
 
+    # Separate the key.
+    # Split on '("|'):'
     key=${j/[\"\']:*/}
     key=${key/#[\"\']}
 
+    # Separate the value.
+    # Split on '$key'.
     val=${j/#?$key?:}
     val=${val#${val%%[![:space:]]*}}
     val=${val/%,}
     val=${val#[\"\']}
     val=${val%[\"\']}
 
+    # Handle lists and objects.
     case ${val::1} in
         \{|\[)
             [[ $key != { ]] &&
                 parent+=${key//[^[a-zA-Z0-9]/_}_
         ;;
 
-        \}|\]) parent= ;;
+        \}|\])
+            parent=
+        ;;
 
-        *) json+=("${parent}${key//[^[a-zA-Z0-9]/_}+=('$val')") ;;
+        *)
+            json+=("${parent}${key//[^[a-zA-Z0-9]/_}+=('$val')")
+        ;;
     esac
 }
 
