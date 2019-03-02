@@ -20,7 +20,7 @@ tokenize() {
             ;;
 
             \"|\')
-                ((string=string == 1 ? 0 : 1))
+                ((string=string==1?0:1))
             ;;
 
             [[:space:]])
