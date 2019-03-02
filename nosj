@@ -19,13 +19,13 @@ tokenize() {
                 esac
             ;;
 
-            \"|\')
-                ((string=string==1?0:1))
-            ;;
-
             [[:space:]])
                 [[ $string == 1 ]] &&
                     tokens+=$char
+            ;;
+
+            \"|\')
+                ((string=string==1?0:1))
             ;;
 
             *) tokens+=$char ;;
