@@ -68,13 +68,8 @@ parse() {
 }
 
 main() {
-    [[ -f $1 ]] || {
-        printf '%s\n' "File '$1' not found" >&2
-        exit 1
-    }
-
     old_ifs=$IFS
-    tokenize "$1"
+    tokenize "${1:-/dev/stdin}"
     parse
 }
 
