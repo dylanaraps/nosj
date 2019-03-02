@@ -53,8 +53,6 @@ parse() {
                 [[ $val ]] &&
                     json+=("${key//[^[a-zA-Z0-9]/_}+=('$val')")
             ;;
-
-            "") ;;
         esac
 
         unset key val
