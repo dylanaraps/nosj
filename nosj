@@ -6,17 +6,13 @@ tokenize() {
     while read -rn 1 char; do
         case $char in
             \{|\}|\[|\]|,)
-                case $string in
-                    1) tokens+=$char ;;
-                    *) tokens+=$'\n'$char$'\n' ;;
-                esac
+                [[ $string == 1 ]] && tokens+=$char
+                [[ $string != 1 ]] && tokens+=$'\n'$char$'\n'
             ;;
 
             :)
-                case $string in
-                    1) tokens+=: ;;
-                    *) tokens+=%%:::%% ;;
-                esac
+                [[ $string == 1 ]] && tokens+=:
+                [[ $string != 1 ]] && tokens+=%%:::%%
             ;;
 
             [[:space:]])
