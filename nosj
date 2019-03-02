@@ -23,7 +23,7 @@ tokenize() {
                 ((string=string == 1 ? 0 : 1))
             ;;
 
-            ""|[[:space:]])
+            [[:space:]])
                 [[ $string == 1 ]] &&
                     tokens+=$char
             ;;
@@ -61,7 +61,7 @@ parse() {
     }
 
     declare -axg "${json[@]}"
-    printf '%s\n' "${json[@]}" >&2
+    printf '%s\n' "${json[@]}"
 }
 
 main() {
