@@ -67,6 +67,7 @@ parse() {
     }
 
     declare -axg "${json[@]}"
+    printf '%s\n' "${json[@]}"
 }
 
 main() {
