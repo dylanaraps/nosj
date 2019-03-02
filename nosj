@@ -2,41 +2,71 @@
 #
 # nosj -
 
+tokenize() {
+    while IFS= read -rn 1 char; do
+        case $char in
+            \{|\}|\[|\]|,)
+                case $string in
+                    1) tokens+=$char ;;
+                    *) tokens+=$'\n'$char$'\n' ;;
+                esac
+            ;;
+
+            \"|\')
+                ((string=string == 1 ? 0 : 1))
+            ;;
+
+            :)
+                if [[ $string == 0 ]]; then
+                    tokens+=%%:::%%
+                else
+                    tokens+=:
+                fi
+            ;;
+
+            ""|[[:space:]])
+                [[ $string == 1 ]] &&
+                    tokens+=$char
+            ;;
+
+            *)
+                tokens+=$char
+            ;;
+        esac
+    done < "$1"
+
+    mapfile -t tokens <<< "$tokens"
+}
+
 parse() {
-    [[ -z $2 ]] &&
-        return
+    for ((i=0;i<${#tokens[@]};i++)) {
+        case ${tokens[i]} in
+            \{|\[)
+                objects+=("${tokens[i-1]}")
+            ;;
 
-    # Remove trailing white-space.
-    j=${2#${2%%[![:space:]]*}}
+            \}|\])
+                unset 'objects[-1]'
+            ;;
 
-    # Separate the key.
-    # Split on '("|'):'
-    key=${j/[\"\']:*/}
-    key=${key/#[\"\']}
+            *"%%:::%%"*)
+                IFS=
+                key=${objects[*]//'%%:::%%'/_}${tokens[i]/'%%:::%%'*}
+                IFS=$old_ifs
 
-    # Separate the value.
-    # Split on '$key'.
-    val=${j/#?$key?:}
-    val=${val#${val%%[![:space:]]*}}
-    val=${val/%,}
-    val=${val#[\"\']}
-    val=${val%[\"\']}
+                val=${tokens[i]/*'%%:::%%'}
 
-    # Handle lists and objects.
-    case ${val::1} in
-        \{|\[)
-            [[ $key != { ]] &&
-                parent+=${key//[^[a-zA-Z0-9]/_}_
-        ;;
+                [[ $val ]] &&
+                    json+=("${key//[^[a-zA-Z0-9]/_}+=('$val')")
+            ;;
 
-        \}|\])
-            parent=
-        ;;
+            "")
+            ;;
+        esac
+        unset key val
+    }
 
-        *)
-            json+=("${parent}${key//[^[a-zA-Z0-9]/_}+=('$val')")
-        ;;
-    esac
+    declare -axg "${json[@]}"
 }
 
 main() {
@@ -45,11 +75,10 @@ main() {
         exit 1
     }
 
-    mapfile -tC parse -c 1 < "$1"
-    declare -axg "${json[@]}"
+    old_ifs=$IFS
 
-    [[ $2 == -v ]] &&
-        printf '%s\n' "${json[@]}"
+    tokenize "$1"
+    parse
 }
 
 main "$@"
