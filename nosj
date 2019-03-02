@@ -16,8 +16,7 @@ tokenize() {
             ;;
 
             [[:space:]])
-                [[ $string == 1 ]] &&
-                    tokens+=$char
+                [[ $string == 1 ]] && tokens+=$char
             ;;
 
             \"|\')
