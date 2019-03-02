@@ -65,9 +65,8 @@ parse() {
 }
 
 main() {
-    IFS=
     tokenize "${1:-/dev/stdin}"
     parse
 }
 
-main "$@"
+IFS= main "$@"
