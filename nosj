@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 #
-# nosj -
+# nosj - json parser in pure bash
 
 tokenize() {
-    while IFS= read -rn 1 char; do
+    while read -rn 1 char; do
         case $char in
             \{|\}|\[|\]|,)
                 case $string in
@@ -47,10 +47,7 @@ parse() {
             ;;
 
             *"%%:::%%"*)
-                IFS=
                 key=${objects[*]//'%%:::%%'/_}${tokens[i]/'%%:::%%'*}
-                IFS=$old_ifs
-
                 val=${tokens[i]/*'%%:::%%'}
 
                 [[ $val ]] &&
@@ -68,7 +65,7 @@ parse() {
 }
 
 main() {
-    old_ifs=$IFS
+    IFS=
     tokenize "${1:-/dev/stdin}"
     parse
 }
