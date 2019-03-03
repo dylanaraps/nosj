@@ -5,7 +5,7 @@
 tokenize() {
     local j str
 
-    while read -d "" -rn 1; do
+    while read -rN 1; do
         case $REPLY in
             [\{\}\[\],])
                 [[ $str ]] && j+=$REPLY
