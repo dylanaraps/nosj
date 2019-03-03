@@ -6,21 +6,25 @@ tokenize() {
     while read -rn 1 char; do
         case $char in
             \{|\}|\[|\]|,)
-                [[ $string == 1 ]] && j+=$char
-                [[ $string != 1 ]] && { tokens+=("$j" "$char"); j=; }
+                [[ $string ]] && j+=$char
+                [[ $string ]] || { tokens+=("$j" "$char"); j=; }
             ;;
 
             :)
-                [[ $string == 1 ]] && j+=:
-                [[ $string != 1 ]] && j+=%%:::%%
+                [[ $string ]] && j+=:
+                [[ $string ]] || j+=%%:::%%
             ;;
 
             [[:space:]])
-                [[ $string == 1 ]] && j+=$char
+                [[ $string ]] && j+=$char
             ;;
 
             \"|\')
-                ((string=string==1?0:1))
+                if [[ $string ]]; then
+                    string=
+                else
+                    string=1
+                fi
             ;;
 
             *) j+=$char ;;
