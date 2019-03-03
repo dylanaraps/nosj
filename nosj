@@ -58,7 +58,7 @@ parse() {
 }
 
 main() {
-    declare -Axg nosj=()
+    declare -Axg nosj=
     tokenize "${1:-/dev/stdin}"
     parse
 }
