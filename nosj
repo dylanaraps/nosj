@@ -20,12 +20,7 @@ tokenize() {
             ;;
 
             [\"\'])
-                if [[ $string ]]; then
-                    string=
-                else
-                    string=1
-                fi
-
+                [[ $string ]] && string= || string=1
                 [[ ${j: -1} == \\ ]] && { string=1; j+=$char; }
             ;;
 
