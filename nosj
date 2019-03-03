@@ -3,30 +3,30 @@
 # nosj - json parser in pure bash
 
 tokenize() {
-    local char j string
+    local j str
 
-    while read -rn 1 char; do
-        case $char in
+    while read -rn 1; do
+        case $REPLY in
             [\{\}\[\],])
-                [[ $string ]] && j+=$char
-                [[ $string ]] || { tokens+=("$j" "$char"); j=; }
+                [[ $str ]] && j+=$REPLY
+                [[ $str ]] || { tokens+=("$j" "$REPLY"); j=; }
             ;;
 
             :)
-                [[ $string ]] && j+=:
-                [[ $string ]] || j+='\ '
+                [[ $str ]] && j+=:
+                [[ $str ]] || j+='\ '
             ;;
 
             [[:space:]])
-                [[ $string ]] && j+=$char
+                [[ $str ]] && j+=$REPLY
             ;;
 
             [\"\'])
-                [[ $string ]] && string= || string=1
-                [[ ${j: -1} == \\ ]] && { string=1; j+=$char; }
+                [[ $str ]] && str= || str=1
+                [[ ${j: -1} == \\ ]] && { str=1; j+=$REPLY; }
             ;;
 
-            *) j+=$char ;;
+            *) j+=$REPLY ;;
         esac
     done < "$1"
 }
@@ -68,6 +68,7 @@ parse() {
 
 main() {
     declare -Ag nosj
+
     tokenize "${1:-/dev/stdin}"
     parse
 }
