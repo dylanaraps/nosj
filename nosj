@@ -50,7 +50,6 @@ parse() {
 
             *"%%:::%%"*)
                 key=${objects[*]//'%%:::%%'/.}${tokens[i]/'%%:::%%'*}
-                key=${key}
                 key_plain=index_${key//[^A-Za-z0-9]/_}
                 val=${tokens[i]/*'%%:::%%'}
 
