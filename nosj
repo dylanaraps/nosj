@@ -58,8 +58,6 @@ parse() {
                 fi
             ;;
         esac
-
-        unset key val
     }
 
     printf 'nosj[%s]\n' "${!nosj[@]}"
