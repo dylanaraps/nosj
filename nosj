@@ -26,10 +26,7 @@ tokenize() {
                     string=1
                 fi
 
-                [[ ${j: -1} == \\ ]] && {
-                    string=1
-                    j+=$char
-                }
+                [[ ${j: -1} == \\ ]] && { string=1; j+=$char; }
             ;;
 
             *) j+=$char ;;
