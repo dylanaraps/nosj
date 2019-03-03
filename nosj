@@ -43,10 +43,11 @@ parse() {
 
             *"%%:::%%"*)
                 key=${objects[*]//'%%:::%%'/.}${tokens[i]/'%%:::%%'*}
+                key=${key//[^[a-zA-Z0-9.]/_}
                 val=${tokens[i]/*'%%:::%%'}
 
                 [[ $val ]] &&
-                    declare -xg "nosj[${key//[^[a-zA-Z0-9.]/_}]=$val"
+                    declare -xg "nosj[$key]=${nosj[$key]:+${nosj[$key]},}$val"
             ;;
         esac
 
