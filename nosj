@@ -76,4 +76,4 @@ main() {
     parse
 }
 
-LANG=C LC_ALL=C IFS= main "$@"
+LANG=C LC_ALL=C IFS= main "$1"
