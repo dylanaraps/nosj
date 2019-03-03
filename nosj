@@ -12,7 +12,7 @@ tokenize() {
 
             :)
                 [[ $string ]] && j+=:
-                [[ $string ]] || j+=%%:::%%
+                [[ $string ]] || j+='\ '
             ;;
 
             [[:space:]])
@@ -48,9 +48,8 @@ parse() {
                 unset 'objects[-1]'
             ;;
 
-            *"%%:::%%"*)
-                key=${objects[*]//'%%:::%%'/.}${tokens[i]/'%%:::%%'*}
-                key=${key}
+            *\\\ *)
+                key=${objects[*]//\\ /.}${tokens[i]/\\ *}
                 key_plain=index_${key//[^A-Za-z0-9]/_}
                 val=${tokens[i]/*'%%:::%%'}
 
