@@ -25,6 +25,11 @@ tokenize() {
                 else
                     string=1
                 fi
+
+                [[ ${j: -1} == \\ ]] && {
+                    string=1
+                    j+=$char
+                }
             ;;
 
             *) j+=$char ;;
