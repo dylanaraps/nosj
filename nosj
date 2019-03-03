@@ -51,10 +51,10 @@ parse() {
             *\\\ *)
                 key=${objects[*]//\\ /.}${tokens[i]/\\ *}
                 key_plain=index_${key//[^A-Za-z0-9]/_}
-                val=${tokens[i]/*'%%:::%%'}
+                val=${tokens[i]/*\\ }
 
                 if [[ -n ${nosj[$key]} ]]; then
-                    declare -i "$key_plain+=1"
+                    let "$key_plain+=1"
                     nosj["${key}[${!key_plain}]"]=$val
 
                     [[ -n ${nosj[${key}[0]]} ]] ||
