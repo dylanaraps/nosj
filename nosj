@@ -54,7 +54,7 @@ parse() {
                 val=${tokens[i]/*\\ }
 
                 if [[ -n ${nosj[$key]} ]]; then
-                    let "$key_plain+=1"
+                    declare -i "$key_plain+=1"
                     nosj["${key}[${!key_plain}]"]=$val
 
                     [[ -n ${nosj[${key}[0]]} ]] ||
