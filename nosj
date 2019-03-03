@@ -28,7 +28,7 @@ tokenize() {
 
             *) j+=$REPLY ;;
         esac
-    done < "$1"
+    done
 }
 
 parse() {
@@ -69,7 +69,7 @@ parse() {
 main() {
     declare -Ag nosj
 
-    tokenize "${1:-/dev/stdin}"
+    tokenize < "${1:-/dev/stdin}"
     parse
 }
 
