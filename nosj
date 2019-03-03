@@ -48,8 +48,10 @@ parse() {
 
                 if [[ -n ${nosj[$key]} ]]; then
                     declare -i "$key_plain+=1"
-                    declare -xg "nosj[$key[${!key_plain}]]=$val"
-                    declare -xg "nosj[$key[0]]=${nosj[$key]}"
+                    declare -xg "nosj[${key}[${!key_plain}]]=$val"
+
+                    [[ -n ${nosj[${key}[0]]} ]] ||
+                        declare -xg "nosj[${key}[0]]=${nosj[$key]}"
 
                 elif [[ $val ]]; then
                     declare -xg "nosj[$key]=$val"
@@ -60,7 +62,7 @@ parse() {
         unset key val
     }
 
-    declare -p nosj
+    printf 'nosj[%s]\n' "${!nosj[@]}"
 }
 
 main() {
