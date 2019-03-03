@@ -19,7 +19,7 @@ tokenize() {
                 [[ $string ]] && j+=$char
             ;;
 
-            \"|\')
+            [\"\'])
                 if [[ $string ]]; then
                     string=
                 else
@@ -71,4 +71,4 @@ main() {
     parse
 }
 
-IFS= main "$@"
+LANG=C LC_ALL=C IFS= main "$@"
