@@ -43,10 +43,17 @@ parse() {
 
             *"%%:::%%"*)
                 key=${objects[*]//'%%:::%%'/.}${tokens[i]/'%%:::%%'*}
+                key_plain="index_${key//[^A-Za-z0-9]/_}"
                 val=${tokens[i]/*'%%:::%%'}
 
-                [[ $val ]] &&
-                    declare -xg "nosj[$key]=${nosj[$key]:+${nosj[$key]},}$val"
+                if [[ -n ${nosj[$key]} ]]; then
+                    declare -i "$key_plain+=1"
+                    declare -xg "nosj[$key[${!key_plain}]]=$val"
+                    declare -xg "nosj[$key[0]]=${nosj[$key]}"
+
+                elif [[ $val ]]; then
+                    declare -xg "nosj[$key]=$val"
+                fi
             ;;
         esac
 
