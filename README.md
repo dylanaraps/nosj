@@ -28,10 +28,3 @@ nosj[colors.color4]
 nosj[colors.color7]
 nosj[colors.color6]
 ```
-
-## Usage
-
-```sh
-# Source the json data.
-. nosj file.json
-```
