@@ -6,28 +6,26 @@ tokenize() {
     while read -rn 1 char; do
         case $char in
             \{|\}|\[|\]|,)
-                [[ $string == 1 ]] && tokens+=$char
-                [[ $string != 1 ]] && tokens+=$'\n'$char$'\n'
+                [[ $string == 1 ]] && j+=$char
+                [[ $string != 1 ]] && { tokens+=("$j" "$char"); j=; }
             ;;
 
             :)
-                [[ $string == 1 ]] && tokens+=:
-                [[ $string != 1 ]] && tokens+=%%:::%%
+                [[ $string == 1 ]] && j+=:
+                [[ $string != 1 ]] && j+=%%:::%%
             ;;
 
             [[:space:]])
-                [[ $string == 1 ]] && tokens+=$char
+                [[ $string == 1 ]] && j+=$char
             ;;
 
             \"|\')
                 ((string=string==1?0:1))
             ;;
 
-            *) tokens+=$char ;;
+            *) j+=$char ;;
         esac
     done < "$1"
-
-    mapfile -t tokens <<< "$tokens"
 }
 
 parse() {
