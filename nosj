@@ -3,6 +3,8 @@
 # nosj - json parser in pure bash
 
 tokenize() {
+    local char j string
+
     while read -rn 1 char; do
         case $char in
             [\{\}\[\],])
@@ -30,6 +32,8 @@ tokenize() {
 }
 
 parse() {
+    local i key key_plain objects val
+
     for ((i=0;i<${#tokens[@]};i++)) {
         case ${tokens[i]} in
             \{|\[)
@@ -63,7 +67,7 @@ parse() {
 }
 
 main() {
-    declare -Axg nosj=()
+    declare -Ag nosj=()
     tokenize "${1:-/dev/stdin}"
     parse
 }
