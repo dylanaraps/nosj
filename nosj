@@ -42,22 +42,22 @@ parse() {
             ;;
 
             *"%%:::%%"*)
-                key=${objects[*]//'%%:::%%'/_}${tokens[i]/'%%:::%%'*}
+                key=${objects[*]//'%%:::%%'/.}${tokens[i]/'%%:::%%'*}
                 val=${tokens[i]/*'%%:::%%'}
 
                 [[ $val ]] &&
-                    json+=("${key//[^[a-zA-Z0-9]/_}+=('$val')")
+                    declare -xg "nosj[${key//[^[a-zA-Z0-9.]/_}]=$val"
             ;;
         esac
 
         unset key val
     }
 
-    declare -axg "${json[@]}"
-    printf '%s\n' "${json[@]}"
+    declare -p nosj
 }
 
 main() {
+    declare -Axg nosj=()
     tokenize "${1:-/dev/stdin}"
     parse
 }
