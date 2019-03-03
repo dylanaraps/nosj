@@ -43,7 +43,7 @@ parse() {
 
             *"%%:::%%"*)
                 key=${objects[*]//'%%:::%%'/.}${tokens[i]/'%%:::%%'*}
-                key_plain="index_${key//[^A-Za-z0-9]/_}"
+                key_plain=index_${key//[^A-Za-z0-9]/_}
                 val=${tokens[i]/*'%%:::%%'}
 
                 if [[ -n ${nosj[$key]} ]]; then
