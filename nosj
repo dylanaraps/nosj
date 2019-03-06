@@ -32,7 +32,9 @@ tokenize() {
 }
 
 parse() {
-    local i key key_plain objects val
+    local i key key_plain nosj objects val
+
+    declare -A nosj
 
     for ((i=0;i<${#tokens[@]};i++)) {
         case ${tokens[i]} in
@@ -46,31 +48,33 @@ parse() {
 
             *\\\ *)
                 key=${objects[*]//\\ /.}${tokens[i]/\\ *}
+                key=${key//!//\\!}
+                key=${key//\$//\\\$}
                 key_plain=index_${key//[^A-Za-z0-9]/_}
                 val=${tokens[i]/*\\ }
 
                 if [[ -n ${nosj[$key]} ]]; then
+                    [[ -n ${nosj[${key}[0]]} ]] || {
+                        nosj["${key}[0]"]=${nosj[$key]}
+                        out+=("nosj[\"${key}[0]\"]='${nosj[$key]}'")
+                    }
+
                     declare -i "$key_plain+=1"
                     nosj["${key}[${!key_plain}]"]=$val
-
-                    [[ -n ${nosj[${key}[0]]} ]] ||
-                        nosj["${key}[0]"]=${nosj[$key]}
+                    out+=("nosj[\"${key}[${!key_plain}]\"]='$val'")
 
                 elif [[ $val ]]; then
                     nosj["$key"]=$val
+                    out+=("nosj[\"$key\"]='$val'")
                 fi
             ;;
         esac
     }
 
-    for k in "${!nosj[@]}"; {
-        printf 'nosj[%s]=%q\n' "$k" "${nosj[$k]}"
-    }
+    printf '%s\n%s\n' "declare -A nosj" "${out[@]}"
 }
 
 main() {
-    declare -Ag nosj
-
     tokenize < "${1:-/dev/stdin}"
     parse
 }
