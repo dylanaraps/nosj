@@ -63,7 +63,9 @@ parse() {
         esac
     }
 
-    printf 'nosj[%s]\n' "${!nosj[@]}"
+    for k in "${!nosj[@]}"; {
+        printf 'nosj[%s]=%q\n' "$k" "${nosj[$k]}"
+    }
 }
 
 main() {
