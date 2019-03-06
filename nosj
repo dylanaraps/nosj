@@ -32,7 +32,7 @@ tokenize() {
 }
 
 parse() {
-    local i key key_plain nosj objects out val
+    local i key key_plain nosj objects o out val
 
     declare -A nosj
 
@@ -48,24 +48,24 @@ parse() {
 
             *\\\ *)
                 key=${objects[*]//\\ /.}${tokens[i]/\\ *}
-                key=${key//!//\\!}
-                key=${key//\$//\\\$}
                 key_plain=index_${key//[^A-Za-z0-9]/_}
                 val=${tokens[i]/*\\ }
 
                 if [[ -n ${nosj[$key]} ]]; then
                     [[ -n ${nosj[${key}[0]]} ]] || {
                         nosj["${key}[0]"]=${nosj[$key]}
-                        out+=("nosj[\"${key}[0]\"]='${nosj[$key]}'")
+                        printf -v o 'nosj[%q]=%q' "${key}[0]" "${nosj[$key]}"
+                        out+=("$o")
                     }
 
                     declare -i "$key_plain+=1"
-                    nosj["${key}[${!key_plain}]"]=$val
-                    out+=("nosj[\"${key}[${!key_plain}]\"]='$val'")
+                    printf -v o 'nosj[%q]=%q' "${key}[${!key_plain}]" "$val"
+                    out+=("$o")
 
                 elif [[ $val ]]; then
                     nosj["$key"]=$val
-                    out+=("nosj[\"$key\"]='$val'")
+                    printf -v o 'nosj[%q]=%q' "$key" "$val"
+                    out+=("$o")
                 fi
             ;;
         esac
