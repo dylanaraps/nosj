@@ -32,7 +32,7 @@ tokenize() {
 }
 
 parse() {
-    local i key key_plain nosj objects val
+    local i key key_plain nosj objects out val
 
     declare -A nosj
 
